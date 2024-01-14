@@ -4,3 +4,8 @@ venv/
 requirements.txt
 README.md
 LICENSE
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
