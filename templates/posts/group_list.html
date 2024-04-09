@@ -1,23 +1,32 @@
 <!DOCTYPE html> <!-- Используется html 5 версии -->
 {% extends 'base.html' %}
+{% load thumbnail %}
 {% block content %}
 
-    <h1>{{ group.title }}</h1>
-    <h3>{{ group.description}}</h3>
+    <div class="container py-5">
+
+        <h1>{{ group.title }}</h1>
+        <h3>{{ group.description }}</h3>
 
 
-    {% for post in posts %}
-        <ul>
-            <li>
-                Автор: {{ post.author.get_full_name }}
-            </li>
-            <li>
-                Дата публикации: {{ post.pub_date|date:"d E Y" }}
-            </li>
-        </ul>
-        <p>{{ post.text }}</p>
-        {% if not forloop.last %}
-            <hr>{% endif %}
-    {% endfor %}
+        {% for post in page_obj %}
+            <ul>
+                <li>
+                    Автор: {{ post.author.get_full_name }}
+                </li>
+                <li>
+                    Дата публикации: {{ post.pub_date|date:"d E Y" }}
+                </li>
+            </ul>
+            <p>{{ post.text }}</p>
+            {% thumbnail post.image "1024x784" upscale=True as im %}
+                <img class="my-2" src="{{ im.url }}" width="300px" height="300px" alt="image">
+            {% endthumbnail %}
+            {% if not forloop.last %}
+                <hr>{% endif %}
+        {% endfor %}
+
+        {% include 'posts/includes/paginator.html' %}
+    </div>
 
 {% endblock %}

@@ -1,19 +1,50 @@
 <!DOCTYPE html> <!-- Используется html 5 версии -->
 {% extends 'base.html' %}
+{% load thumbnail %}
 {% block content %}
-    <p>{{ title }}</p>
-    {% for post in posts %}
-        <ul>
-            <li>
-                Автор: {{ post.author.get_full_name }}
-            </li>
-            <li>
-                Дата публикации: {{ post.pub_date|date:"d E Y" }}
-            </li>
-        </ul>
-        <p>{{ post.text }}</p>
-        <a href="{% url 'posts:group_posts' post.group.slug %}">все записи группы</a>
-        {% if not forloop.last %}
-            <hr>{% endif %}
-    {% endfor %}
+    {% load cache %}
+    {% cache 20 sidebar %}
+        <div class="container">
+
+            {#        <h1>Поиск по записям</h1>#}
+            {#        <div class="card">#}
+            {#            <div class="card-body">#}
+            {#                <form class="form-inline" action="/">#}
+            {#                    <div class="form-row">#}
+            {#                        <label>#}
+            {#                            <input name="q" class="form-control form-control-lg" type="search"#}
+            {#                                   placeholder="Поиск" {% if keyword %}value="{{ keyword }}"{% endif %}>#}
+            {#                        </label>#}
+            {#                        <button class="btn" type="submit">Найти</button>#}
+            {#                    </div>#}
+            {#                </form>#}
+            {#            </div>#}
+            {#        </div>#}
+            <div class="container">
+                {% for post in page_obj %}
+                    <strong>
+                        Автор: {{ post.author.get_full_name }}
+                        <br> Дата публикации: {{ post.created|date:"d M Y" }}
+                        {% if post.group.slug is not None %}
+                            <br> Группа:
+                            <a href="{% url 'posts:group_posts' post.group.slug %}">{{ post.group.title }}</a>
+                        {% else %}
+                            <br> Группы нет.
+                        {% endif %}
+                        <br><a href="{% url 'posts:post_detail' post.id %}">смотреть запись </a>
+                        {% if user == post.author %}
+                            <br><a href="{% url 'posts:post_edit' post.id %}">редактировать запись </a>
+                        {% endif %}
+                    </strong>
+                    <p>{{ post.text|linebreaksbr }}</p>
+                    {% thumbnail post.image "1024x784" upscale=True as im %}
+                        <img class="my-2" src="{{ im.url }}" width="300px" height="300px" alt="image">
+                    {% endthumbnail %}
+                    <hr>
+                {% endfor %}
+
+                {% include 'posts/includes/paginator.html' %}
+            </div>
+        </div>
+    {% endcache %}
 {% endblock %}
