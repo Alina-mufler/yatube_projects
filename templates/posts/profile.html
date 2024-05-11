@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% block title %}Профайл пользователя {{ username }}{% endblock %}
+{% block content %}
+    <div class="container py-5">
+        <h1>Все посты пользователя {{ username }}</h1>
+        <h3>Всего постов: {{ page_obj|length }} </h3>
+        <article>
+            {% for post in page_obj %}
+                <ul>
+                    <li>
+                        Дата публикации: {{ post.pub_date|date:"d E Y" }}
+                    </li>
+                </ul>
+                <p>{{ post.text }}</p>
+                {% thumbnail post.image "1024x784" upscale=True as im %}
+                    <img class="my-2" src="{{ im.url }}" width="300px" height="300px"  alt="image">
+                {% endthumbnail %}
+                <br><a href="{% url 'posts:post_detail' post.id %}">подробная информация </a>
+                {% if user.username == username %}
+                    <br><a href="{% url 'posts:post_edit' post.id %}">редактировать запись </a>
+                {% else %}
+                    <br><a href="{% url 'posts:post_detail' post.id %}">смотреть запись </a>
+                {% endif %}
+
+                {% if post.group is not None %}
+                    <br><a href="{% url 'posts:group_posts' post.group.slug %}">все записи группы</a>
+                {% else %}
+                    <br> Группы нет.
+                {% endif %}
+                {% if not forloop.last %}
+                    <hr>{% endif %}
+            {% endfor %}
+        </article>
+
+        {% include 'posts/includes/paginator.html' %}
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% block title %}Пост {{ post.text|truncatechars:30 }}{% endblock %}
+{% block content %}
+    <div class="container py-5">
+        <div class="row">
+            <article>
+                <ul>
+                    <li>
+                        Автор: {{ post.author.get_full_name }}
+                        <a href="{% url 'posts:profile' post.author %}">все посты пользователя</a>
+                    </li>
+                    <li>
+                        Дата публикации: {{ post.pub_date|date:"d E Y" }}
+                    </li>
+                </ul>
+                {% thumbnail post.image "1024x784" upscale=True as im %}
+                    <img class="my-2" src="{{ im.url }}" width="300px" height="300px" alt="image">
+                {% endthumbnail %}
+                <p>{{ post.text }}</p>
+                <a href="{% url 'posts:post_detail' post.pk %}">подробная информация</a>
+            </article>
+        </div>
+        {% include 'posts/includes/comments.html' %}
+    </div>
+{% endblock %}

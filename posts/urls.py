@@ -1,10 +1,8 @@
 from django.urls import path
 
-
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
-
 
 app_name = 'posts'
 
@@ -21,6 +19,8 @@ urlpatterns = [
     path('create/', views.create_post, name='post_create'),
     # редактирование поста
     path('posts/<int:post_id>/edit/', views.post_edit, name='post_edit'),
+    path('posts/<int:post_id>/delete/', views.post_delete, name='post_delete'),
+
     # добавление комментария
     path('posts/<int:post_id>/comment', views.add_comment, name='add_comment'),
 
