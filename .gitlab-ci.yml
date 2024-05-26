@@ -1,15 +1,10 @@
 stages:
-  - build
   - test
 
-build_job:
-  stage: build
-  script:
-    - echo "Build started"
-    - make build
-
-test_job:
+test-job:
   stage: test
+  image: python:3.9-alpine3.19
+  before_script:
+   - pip install --upgrade pip
   script:
-    - echo "Test started"
-    - make test
+   - python3 manage.py test about
