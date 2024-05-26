@@ -1,0 +1,13 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out Yatube_project 🚀
+on: [push]
+jobs:
+  test:
+    runs-on: python:3.9-alpine3.19
+    steps:
+      - name: update pip
+        run: pip install --upgrade pip
+      - name: update requirements
+        run: pip install -r requirements.txt -y
+      - name: run test
+        run: python3 manage.py test about
