@@ -1,0 +1,15 @@
+stages:
+  - build
+  - test
+
+build_job:
+  stage: build
+  script:
+    - echo "Build started"
+    - make build
+
+test_job:
+  stage: test
+  script:
+    - echo "Test started"
+    - make test
